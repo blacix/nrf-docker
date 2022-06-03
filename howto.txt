@@ -4,3 +4,9 @@ docker build -t nrfconnect-sdk --build-arg sdk_nrf_revision=v1.9-branch .
 # from project dir
 docker run --rm -v ${PWD}:/workdir/project nrfconnect-sdk /bin/bash -c '\
     west build -c -p always --build-dir build_docker -b nrf52840dk_nrf52840 .'
+
+
+# start as daemon / detached
+docker run -d nrfconnect-sdk bash
+docker ps
+docker exec -it <container id> bash
