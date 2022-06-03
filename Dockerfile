@@ -70,13 +70,14 @@ RUN mkdir /workdir/project && \
 FROM base
 ARG sdk_nrf_revision=main
 RUN \
-    mkdir tmp && cd tmp && \
+    cd /workdir && \
     west init -m https://github.com/nrfconnect/sdk-nrf --mr ${sdk_nrf_revision} && \
     west update --narrow -o=--depth=1 && \
     python3 -m pip install -r zephyr/scripts/requirements.txt && \
     python3 -m pip install -r nrf/scripts/requirements.txt && \
     python3 -m pip install -r bootloader/mcuboot/scripts/requirements.txt && \
-    cd .. && rm -rf tmp
+	ls -la
+
 
 WORKDIR /workdir/project
 ENV LC_ALL=C.UTF-8
@@ -84,6 +85,6 @@ ENV LANG=C.UTF-8
 ENV XDG_CACHE_HOME=/workdir/.cache
 ENV ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
 ENV GNUARMEMB_TOOLCHAIN_PATH=/workdir/gcc-arm-none-eabi-9-2019-q4-major
-ENV ZEPHYR_BASE=/workdir/project/zephyr
+ENV ZEPHYR_BASE=/workdir/zephyr
 ENV PATH="${GNUARMEMB_TOOLCHAIN_PATH}/bin:${PATH}"
 ENV PATH="${ZEPHYR_BASE}/scripts:${PATH}"
