@@ -66,6 +66,18 @@ RUN mkdir /workdir/project && \
     ln -s /usr/bin/clang-format-9 /usr/bin/clang-format && \
     wget -qO- https://raw.githubusercontent.com/nrfconnect/sdk-nrf/main/.clang-format > /workdir/.clang-format
 
+
+# Create a new user with the desired UID and GID
+ARG USER_NAME=jenkins
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+RUN groupadd -g ${GROUP_ID} ${USER_NAME} && \
+    useradd -u ${USER_ID} -g ${GROUP_ID} -ms /bin/bash ${USER_NAME}
+
+# user owns the workspace
+RUN chown -R ${USER_NAME}:${USER_NAME} /workdir
+USER ${USER_NAME}:${USER_NAME}
+
 # Download sdk-nrf and west dependencies to install pip requirements
 FROM base
 ARG sdk_nrf_revision=main
